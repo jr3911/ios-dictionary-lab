@@ -11,6 +11,19 @@ Fork and clone this repo. On your fork, answer and commit the follow questions. 
 
 - Translate at least 3 of the capital names into another language.
 
+```swift
+var citiesDict: [String:String] = ["United Arab Emirates":"Abu Dhabi", "Netherlands":"Amsterdam", "Thailand":"Bangkok"]
+
+citiesDict["China"] = "Beijing"
+citiesDict["Germany"] = "Berlin"
+
+citiesDict["Germany"] = "ベルリン"      //Berlin in Japanese
+citiesDict["United Arab Emirates"] = "アブダビ"     //Abu Dhabi in Japanese
+citiesDict["Netherlands"] = "アムステルダム"       //Amsterdam in Japanese
+
+print(citiesDict)
+```
+
 
 ## Question 2
 
@@ -27,6 +40,45 @@ Fork and clone this repo. On your fork, answer and commit the follow questions. 
 - Remove the new keys made in the previous two steps
 
 - Add 2 to every value inside of `someDict`.
+
+```swift
+var someDict:[String:Int] = ["One": 1, "Two": 4, "Three": 9, "Four": 16, "Five": 25]
+
+//prints the result of "Three" and "Five"
+print("Sum of 'Three' and 'Five': \(someDict["Three"]! + someDict["Five"]!)")
+
+//Adds keys and values for "Six" and "Seven"
+someDict["Six"] = 36
+someDict["Seven"] = 49
+print("Keys for 'Six' and 'Seven' have been created")
+
+//makes a key "productUpToSeven" and sets its value to be the product of all values
+someDict["productUpToSeven"] = 1
+for v in someDict.values {
+    someDict["productUpToSeven"] = someDict["productUpToSeven"]! * v
+}
+print("Product of all the values up to 'Seven': \(someDict["productUpToSeven"]!)")
+
+someDict["sumUpToSix"] = 0
+for v in someDict.values {
+    if v != someDict["productUpToSeven"]! {
+        someDict["sumUpToSix"]! += v
+    }
+}
+print("Sum of values 'One' through 'Six': \(someDict["sumUpToSix"]!)")
+
+//removes the new keys made in the previous two steps 'productUpToSeven' and 'sumUpToSix'
+someDict.removeValue(forKey: "productUpToSeven")
+someDict.removeValue(forKey: "sumUpToSix")
+print("Keys for 'productUpToSeven' and 'sumUpToSix' have been removed")
+
+//adds 2 to every value inside 'someDict'
+for (key, value) in someDict {
+    someDict[key] = value + 2
+}
+print(someDict)
+
+```
 
 
 ## Question 3
@@ -50,6 +102,33 @@ Using the dictionary created in the previous problem, do the following:
 - Write an if/else statement that compares the score of John Krakaur with Mark Twain. Print out the name of the author with the highest score.
 
 - Use a for-loop to iterate through the dictionary you created at the beginning of the problem, and print out the content in the form of key: value, one entry per line.
+
+```swift
+var authorAndScore: [String:Float] = ["Mark Twain":8.9, "Nathaniel Hawthorne":5.1, "John Steinbeck":2.3, "C.S. Lewis":9.9, "Jon Krakauer":6.1]
+
+//prints the floating-point score for John Steinbeck
+print("John Steinbeck's comprehensibility score: \(authorAndScore["John Steinbeck"]!)")
+
+//add key 'Erk Larson' with value '9.2'
+authorAndScore["Erik Larson"] = 9.2
+print("Erik Larson has been added with a comprehensibility score of 9.2")
+
+//prints which author has the higher score between the two
+if authorAndScore["Jon Krakauer"]! != authorAndScore["Mark Twain"]! {
+    if authorAndScore["Jon Krakauer"]! > authorAndScore["Mark Twain"]! {
+        print("Jon Krakauer has a higher score than Mark Twain")
+    } else {
+        print("Mark Twain has a higher score than Jon Krakauer")
+    }
+} else {
+    print("Jon Krakauer and Mark Twain have the same comprehensibility scores")
+}
+
+// iterates through the dictionary and prints out each entry
+for (key, value) in authorAndScore {
+    print("\(key): \(value)")
+}
+```
 
 
 ## Question 4
@@ -87,6 +166,36 @@ var code = [
 ]
 
 var message = "hello world"
+var encodedMessage = ""
+
+for char in message {
+    code[String(char)] = code[String(char)] ?? " "
+    encodedMessage += code[String(char)]!
+}
+print(encodedMessage)
+
+//Part Two of Question - Decoding an encoded message
+encodedMessage = "uijt nfttbhf jt ibse up sfbe"
+var decodedMessage = ""
+
+//decoding and printing the decodedMessage
+for char in encodedMessage {
+    //checks if the character in the encoded message is a space (not included in the code) and just add it to the decodedMessage
+    if char == " " {
+        decodedMessage += " "
+    } else {
+        //if the char is not a white space, then cross reference it to the values in code and give back the corresponding key, then add to decodedMessage
+        for entry in code {
+            if let letter = code[entry.key] {
+                if String(char) == letter {
+                decodedMessage += entry.key
+                }
+            }
+        }
+    }
+}
+print(decodedMessage)
+
 ```
 
 You are also given an `encodedMessage` which contains only lowercase letters and spaces. Use the `code` dictionary to decode the message and print it.
@@ -120,6 +229,24 @@ var people: [[String:String]] = [
         "lastName": "Bowen"
     ]
 ]
+
+//firstNames
+var firstNames = [String] ()
+for dictionary in people {
+    for key in dictionary.keys {
+        if key == "firstName" {
+            firstNames.append(dictionary[key]!)
+        }
+    }
+}
+print(firstNames)
+
+//fullNames
+var fullNames = [String] ()
+for dictionary in people {
+    fullNames.append(dictionary["firstName"]! + " " + dictionary["lastName"]!)
+}
+print(fullNames)
 ```
 
 Now, create an array of strings called `fullNames` that contains the values for `“firstName”` and `“lastName”` from the dictionary separated by a space.
@@ -157,6 +284,25 @@ var peopleWithScores: [[String: String]] = [
         "score": "16"
     ]
 ]
+
+var highestScore: Int = 0
+var highestPlayer: String = ""
+
+for dictionary in peopleWithScores {
+    for key in dictionary.keys {
+        if key == "score" {
+            if let stringScore = dictionary["score"] {
+                let numberScore = Int(stringScore)!
+                if numberScore > highestScore {
+                    highestScore = numberScore
+                    highestPlayer = ("\(dictionary["firstName"] ?? "Unavailable") \(dictionary["lastName"] ?? "Unavailable")")
+                }
+            }
+        }
+    }
+}
+print("\(highestPlayer): \(highestScore)")
+
 ```
 
 Print out the dictionary above in the following format:  **full name - score**
@@ -170,6 +316,32 @@ You are given an array of integers. The frequency of a number is the number of t
 
 Print the numbers in ascending order followed by their frequency.
 
+```swift
+var numbers = [1, 2, 3, 2, 3, 5, 2, 1, 3, 4, 2, 2, 2]
+var numTracker = 0
+
+//creating an array of unique integers to use as keys for dictionary
+var dictKeys = [Int]()
+for num in numbers {
+    if dictKeys.contains(num) == false {
+        dictKeys.append(num)
+    }
+}
+
+//creating dictionary using the above array and iterating through both it and the original array
+//keep tracker of the specific number that corresponds to the key
+var dictionary: [Int:Int] = [:]
+for k in dictKeys {
+    numTracker = 0
+    for num in numbers{
+        if num == k {
+            numTracker += 1
+            dictionary[k] = numTracker
+        }
+    }
+}
+print(dictionary)
+```
 
 ## Question 8
 
@@ -177,10 +349,57 @@ Print the most common letter in the string below:
 
 `var myString = "We're flooding people with information. We need to feed it through a processor. A human must turn information into intelligence or knowledge. We've tended to forget that no computer will ever ask a new question."`
 
+```swift
+var myString = "We're flooding people with information. We need to feed it through a processor. A human must turn information into intelligence or knowledge. We've tended to forget that no computer will ever ask a new question."
+
+//creating array to use as reference when making keys for dicitonary
+var alphabet = "qwertyuiopasdfghjklzxcvbnm"
+var dictAlphabet = [Character]()
+    for char in myString {
+        if alphabet.contains(char) {
+            if dictAlphabet.contains(char) == false {
+                dictAlphabet.append(char)
+        }
+    }
+}
+
+// creating a dictionary with keys from above and updating each key's value with a counting variable
+var dictionary: [Character:Int] = [:]
+var charTracker = 0
+for k in dictAlphabet {
+    for char in myString {
+        if char == k {
+            charTracker += 1
+            dictionary[k] = charTracker
+        }
+    }
+}
+
+//iterating through the dictionary and keeping track/updating which letter has the most occurrences
+var mostOccurrences = 0
+var letterWithMostOccurrences: Character = " "
+for key in dictionary.keys {
+    if dictionary[key]! > mostOccurrences {
+        mostOccurrences = dictionary[key]!
+        letterWithMostOccurrences = key
+    }
+}
+print("'\(letterWithMostOccurrences)', with \(dictionary[letterWithMostOccurrences]!) number of frequencies")
+
+```
 
 ## Question 9
 
 Write code that creates a dictionary where the keys are Ints between 0 and 20 inclusive, and each key's value is its cube.
+
+```swift
+var zeroTwentyDict: [Int:Int] = [:]
+
+for i in 0...20 {
+    zeroTwentyDict[i] = i * i
+}
+print(zeroTwentyDict)
+```
 
 
 ## Question 10
@@ -190,6 +409,24 @@ Write code that iterates through `testStates` and prints out whether or not that
 ```swift
 let statePop = ["Alabama": 4.8, "Alaska": 0.7, "Arizona": 6.7, "Arkansas": 3.0]
 let testStates = ["California","Arizona", "Alabama", "New Mexico"]
+
+var verification = false
+
+for state in testStates {
+    verification = false
+    for key in statePop.keys {
+        if state == key {
+            verification = true
+            break
+        }
+    }
+    if verification == true {
+        print("\(state) is a key in statePop")
+    } else {
+        print("\(state) is not in statePop")
+    }
+}
+
 ```
 
 
@@ -211,6 +448,19 @@ var deposits: [String: [Double]] = [
  "Clark" : [555.23, 45.67, 99.95, 80.76, 56.99, 46.50, 265.70],
  "Johnson" : [12.56, 300.00, 640.50, 255.60, 26.88]
 ]
+
+var highestDeposit = 0.0
+var highBaller = ""
+
+for (name, money) in deposits {
+    if money.reduce(0,+) > highestDeposit {
+        highestDeposit = money.reduce(0,+)
+        highBaller = name
+    }
+}
+
+var adjustedMoney = String(format: "%.2f", highestDeposit)
+print("\(highBaller) has the most money: $\(adjustedMoney)")
 ```
 
 
@@ -219,6 +469,52 @@ var deposits: [String: [Double]] = [
 Print the second most common letter in the string below:
 
 `var myString = "We're flooding people with information. We need to feed it through a processor. A human must turn information into intelligence or knowledge. We've tended to forget that no computer will ever ask a new question."`
+
+```swift
+var myString = "We're flooding people with information. We need to feed it through a processor. A human must turn information into intelligence or knowledge. We've tended to forget that no computer will ever ask a new question."
+
+
+//creating array to use as reference when making keys for dicitonary
+var alphabet = "qwertyuiopasdfghjklzxcvbnm"
+var dictAlphabet = [Character]()
+for char in myString {
+    if alphabet.contains(char) {
+        if dictAlphabet.contains(char) == false {
+            dictAlphabet.append(char)
+        }
+    }
+}
+
+// creating a dictionary with keys from above and updating each key's value with a counting variable
+var dictionary: [Character:Int] = [:]
+var charTracker = 0
+for k in dictAlphabet {
+    for char in myString {
+        if char == k {
+            charTracker += 1
+            dictionary[k] = charTracker
+        }
+    }
+}
+
+//iterating through the dictionary and keeping track/updating which letter has the most occurrences
+var mostOccurrences = 0
+var letterWithMostOccurrences: Character = " "
+var secondMostOccurrences = 0
+var secondMostLetter: Character = " "
+
+for key in dictionary.keys {
+    if dictionary[key]! > mostOccurrences {
+        //update the second most common before updating the most common
+        secondMostLetter = letterWithMostOccurrences
+        secondMostOccurrences = mostOccurrences
+        //update the most common
+        mostOccurrences = dictionary[key]!
+        letterWithMostOccurrences = key
+    }
+}
+print("'\(secondMostLetter)', with \(secondMostOccurrences) number of frequencies")
+```
 
 
 ## Question 13
@@ -234,6 +530,28 @@ let arr1 = [2, 4, 5, 6, 8, 10, 12]
 let arr2 = [1, 2, 3, 4, 5, 6]
 let arr3 = [5, 6, 7, 8, 9, 10, 11, 12]
 let arr4 = [1, 3, 4, 5, 6, 7, 9]
+
+// creating new array and appending values through loops if array does not already contain the value at that point thus far.
+var arr5 = [Int]()
+
+for num in arr1 + arr2 + arr3 + arr4 where arr5.contains(num) == false {
+    arr5.append(num)
+}
+//sorting the array in ascending order
+arr5 = arr5.sorted()
+
+print(arr5)
+
+//creating new array that contains only unique values that appear in all 4 arrays
+var arr6 = [Int]()
+for num in arr1 + arr2 + arr3 + arr4 where arr6.contains(num) == false && arr1.contains(num) == true && arr2.contains(num) == true && arr3.contains(num) == true && arr4.contains(num) == true {
+    arr6.append(num)
+}
+
+arr6 = arr6.sorted()
+
+print(arr6)
+
 ```
 
 
